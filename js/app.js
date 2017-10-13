@@ -46,17 +46,19 @@ Player.prototype.reset = function() {
 // if collision with an enemy, reset player's position
 Player.prototype.update = function(dt) {
 	if (this.pressedKey == 'left' && this.x > 0) this.x -= 101;
-	if (this.pressedKey == 'right' && this.y > 0) this.x += 101;
+	if (this.pressedKey == 'right' && this.x < 400) this.x += 101;
 	if (this.pressedKey == 'up' && this.y > 0) this.y -= 83;
 	if (this.pressedKey == 'down' && this.y < 400) this.y += 83;
 	// reset the pressedKey
 	this.pressedKey = null;
-	if (this.y < 0) this.reset();
-
+	if (this.y < -10) {
+        alert("You won!");
+        this.reset();
+    }
 	// test collision with Enemy
 	for (let i = 0; i < 3; i++) {
-		if (this.x >= allEnemies[i].x - 25 && this.x <= allEnemies[i].x + 25) {
-			if (this.y >= allEnemies[i].y - 25 && this.y <= allEnemies[i].y + 25) {
+		if (this.x >= allEnemies[i].x - 70 && this.x <= allEnemies[i].x + 70) {
+			if (this.y >= allEnemies[i].y - 10 && this.y <= allEnemies[i].y + 10) {
 				this.reset();
 			}
 		}
@@ -79,9 +81,9 @@ Player.prototype.handleInput = function(command) {
 
 var player = new Player();
 var allEnemies = [];
-allEnemies.push(new Enemy(0, 50));
-allEnemies.push(new Enemy(0, 140));
-allEnemies.push(new Enemy(0, 230));
+allEnemies.push(new Enemy(-10, 50));
+allEnemies.push(new Enemy(-10, 140));
+allEnemies.push(new Enemy(-10, 230));
 
 
 
