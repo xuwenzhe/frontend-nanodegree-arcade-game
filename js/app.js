@@ -1,3 +1,5 @@
+// Whole-script strict mode syntax
+'use strict';
 // Enemies our player must avoid
 var Enemy = function(x, y) {
     // Variables applied to each of our instances go here,
@@ -20,7 +22,11 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x <= 505) this.x += this.speed * dt;
-    else this.x = -10;
+    else this.x = -30;
+    if (player.x > this.x - 80 && player.x < this.x + 80) {
+        if (player.y > this.y - 20 && player.y < this.y + 20)
+            player.reset();
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -32,48 +38,40 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-	this.sprite = 'images/char-boy.png'
-	this.x = 200;
-	this.y = 400;
+    this.sprite = 'images/char-boy.png'
+    this.x = 200;
+    this.y = 400;
 };
 
 // reset player's location
 Player.prototype.reset = function() {
-	this.x = 200;
-	this.y = 400;
+    this.x = 200;
+    this.y = 400;
 };
+
 // Update the player's position based on keyboard input
 // if collision with an enemy, reset player's position
 Player.prototype.update = function(dt) {
-	if (this.pressedKey == 'left' && this.x > 0) this.x -= 101;
-	if (this.pressedKey == 'right' && this.x < 400) this.x += 101;
-	if (this.pressedKey == 'up' && this.y > 0) this.y -= 83;
-	if (this.pressedKey == 'down' && this.y < 400) this.y += 83;
-	// reset the pressedKey
-	this.pressedKey = null;
-	if (this.y < -10) {
+    if (this.pressedKey == 'left' && this.x > 0) this.x -= 101;
+    if (this.pressedKey == 'right' && this.x < 400) this.x += 101;
+    if (this.pressedKey == 'up' && this.y > 0) this.y -= 83;
+    if (this.pressedKey == 'down' && this.y < 400) this.y += 83;
+    // reset the pressedKey
+    this.pressedKey = null;
+    if (this.y < -10) {
         alert("You won!");
         this.reset();
     }
-	// test collision with Enemy
-	for (let i = 0; i < 3; i++) {
-		if (this.x >= allEnemies[i].x - 70 && this.x <= allEnemies[i].x + 70) {
-			if (this.y >= allEnemies[i].y - 10 && this.y <= allEnemies[i].y + 10) {
-				this.reset();
-			}
-		}
-	}
 };
+
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Player.prototype.handleInput = function(command) {
-	this.pressedKey = command;
+    this.pressedKey = command;
 };
-
-
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -84,9 +82,6 @@ var allEnemies = [];
 allEnemies.push(new Enemy(-10, 50));
 allEnemies.push(new Enemy(-10, 140));
 allEnemies.push(new Enemy(-10, 230));
-
-
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
